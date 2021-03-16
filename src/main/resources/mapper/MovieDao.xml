@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.MovieDao">
+
+    <resultMap type="com.example.demo.entity.Movie" id="MovieMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="picUrl" column="pic_url" jdbcType="VARCHAR"/>
+        <result property="targetUrl" column="target_url" jdbcType="VARCHAR"/>
+        <result property="introduction" column="introduction" jdbcType="VARCHAR"/>
+        <result property="downloadUrl" column="download_url" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="MovieMap">
+        select
+          id, title, pic_url, target_url, introduction, download_url, create_time
+        from test.movie
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="MovieMap">
+        select
+          id, title, pic_url, target_url, introduction, download_url, create_time
+        from test.movie
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="MovieMap">
+        select
+        id, title, pic_url, target_url, introduction, download_url, create_time
+        from test.movie
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="title != null and title != ''">
+                and title = #{title}
+            </if>
+            <if test="picUrl != null and picUrl != ''">
+                and pic_url = #{picUrl}
+            </if>
+            <if test="targetUrl != null and targetUrl != ''">
+                and target_url = #{targetUrl}
+            </if>
+            <if test="introduction != null and introduction != ''">
+                and introduction = #{introduction}
+            </if>
+            <if test="downloadUrl != null and downloadUrl != ''">
+                and download_url = #{downloadUrl}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into test.movie(title, pic_url, target_url, introduction, download_url, create_time)
+        values (#{title}, #{picUrl}, #{targetUrl}, #{introduction}, #{downloadUrl}, #{createTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into test.movie(title, pic_url, target_url, introduction, download_url, create_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.title}, #{entity.picUrl}, #{entity.targetUrl}, #{entity.introduction}, #{entity.downloadUrl},
+            #{entity.createTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into test.movie(title, pic_url, target_url, introduction, download_url, create_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.title}, #{entity.picUrl}, #{entity.targetUrl}, #{entity.introduction}, #{entity.downloadUrl},
+            #{entity.createTime})
+        </foreach>
+        on duplicate key update
+        title = values(title) , pic_url = values(pic_url) , target_url = values(target_url) , introduction =
+        values(introduction) , download_url = values(download_url) , create_time = values(create_time)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update test.movie
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="picUrl != null and picUrl != ''">
+                pic_url = #{picUrl},
+            </if>
+            <if test="targetUrl != null and targetUrl != ''">
+                target_url = #{targetUrl},
+            </if>
+            <if test="introduction != null and introduction != ''">
+                introduction = #{introduction},
+            </if>
+            <if test="downloadUrl != null and downloadUrl != ''">
+                download_url = #{downloadUrl},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from test.movie where id = #{id}
+    </delete>
+
+</mapper>
+
