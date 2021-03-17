@@ -10,8 +10,8 @@ import java.sql.ResultSet;
 public class MyExecutorImpl implements MyExecutor {
 	@Override
 	public <T> T query(String statment, String parameter) {
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
+		Connection connection;
+		PreparedStatement preparedStatement;
 		Movie movie = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -31,6 +31,6 @@ public class MyExecutorImpl implements MyExecutor {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		return (T) movie;
+		return (T)movie;
 	}
 }

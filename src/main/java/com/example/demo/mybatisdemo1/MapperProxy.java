@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 /**
+ * 动态代理类
  * 用来根据mapper对应XML文件中的方法名，找到SQL
  */
 public class MapperProxy implements InvocationHandler {
